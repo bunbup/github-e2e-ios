@@ -10,14 +10,20 @@ jobs:
         device: [iPhone 12, iPhone 11]
 
     steps:
+      - name: Install cocoapods
+        run: gem install cocoapods
+
       - name: list simulators
         run: xcrun instruments -s
 
       - name: checkout
         uses: actions/checkout@v2
 
+      - name: install dependencies
+        run: pod install
+
       - name: run test
-        run: xcodebuild -project app.xcodeproj -scheme app -sdk iphonesimulator -destination 'platform=iOS Simulator,name=${{matrix.device}},OS=14.4' clean test
+        run: xcodebuild -workspace app.xcworkspace -scheme app -sdk iphonesimulator -destination 'platform=iOS Simulator,name=${{matrix.device}},OS=14.4' clean test
 
       - name: Upload Test result directory
         uses: actions/upload-artifact@v2
